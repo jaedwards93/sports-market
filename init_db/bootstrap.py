@@ -1,5 +1,6 @@
 from util.postgres import PostgresConnection
 from util.custom_errors import ConfigError
+from init_db.stg_schemas import schema_list
 from init_db.stg_tables import table_list
 import os
 import dotenv as e
@@ -96,15 +97,9 @@ def run():
                                        db_name='SPORTS_MARKET_DB_NAME',
                                        auto_commit=True)
 
-    # create bronze-level schemas
-    bronze_schema_list = [
-        'stg_the_odds_api',
-        'stg_reference'
-    ]
-
-    if not bronze_schema_list:
-        raise AttributeError("""Empty list: bronze_schema_list""")
-    for schema in bronze_schema_list:
+    if not schema_list:
+        raise ConfigError("""Empty list: stg_schema_list""")
+    for schema in schema_list:
         create_schema(pg_admin_conn, pg_admin_conn.db_name, schema)
 
     # create the odds api bronze tables
