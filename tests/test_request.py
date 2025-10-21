@@ -1,5 +1,4 @@
-import pytest
-from util.request import ApiCall  # adjust path if needed
+from util.request import ApiCall
 
 
 def test_github_api_call_returns_json():

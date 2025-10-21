@@ -1,13 +1,18 @@
+from typing import Optional
 import dotenv as e
 import os
 import requests
+from .custom_errors import ConfigError
+
+e.load_dotenv()
 
 
 class ApiCall:
-    def __init__(self, key_name, url, additional_params=None):
-        e.load_dotenv()
-        self.url = url
+    def __init__(self, key_name: str, url: str, additional_params: Optional[dict] = None):
+        if not os.getenv(key_name):
+            raise ConfigError(f"No key exists in .env for key={key_name}")
         self.api_key = os.getenv(key_name)
+        self.url = url
         self.params = {
             'api_key': self.api_key
         }
