@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: raw_the_odds_api
+    description: >
+      Raw JSON data ingested from The Odds API into the bronze layer.
+      This includes sports, fixtures, and odds snapshots.
+    schema: raw_the_odds_api      # matches your Postgres schema name
+    database: sports_market       # optional for Postgres, but include for clarity
+    loaded_at_field: crt_dt       # timestamp field for freshness checks
+    freshness:
+      warn_after: { count: 24, period: hour }
+      error_after: { count: 48, period: hour }
+
+    tables:
+      - name: sports
+        description: >
+          Raw sports metadata pulled from The Odds API `/sports` endpoint.
+          One record per sport, containing key, title, group, and status flags.
+
