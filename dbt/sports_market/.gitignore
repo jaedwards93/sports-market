@@ -1,4 +1,5 @@
 
-target/
+../../remove_if_safe/target/
 dbt_packages/
 logs/
+dbt_internal_packages/

@@ -153,10 +153,11 @@ def run():
         for role_name, role_password in schema_creds.items():
             create_schema_role(pg_admin_conn, schema, role_name, role_password)
 
+    test = table_list
     # create the odds api bronze tables
-    for schema, table in table_list.items():
-        table_name, table_definition = next(iter(table.items()))
-        create_table(pg_admin_conn, schema, table_name, table_definition)
+    for schema, tables in table_list.items():
+        for table_name, table_ddl in tables.items():
+            create_table(pg_admin_conn, schema, table_name, table_ddl)
 
     # create bronze sequences
     for schema, sequence in sequence_list.items():

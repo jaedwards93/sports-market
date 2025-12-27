@@ -28,3 +28,7 @@ Thumbs.db
 
 # dbt
 dbt.log
+
+/remove_if_safe/
+
+/dbt/sports_market/target

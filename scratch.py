@@ -13,6 +13,21 @@ def sports_call_test():
         print(result)
 
 
+def odds_call_test():
+    sport_key = 'americanfootball_nfl'
+    additional_params = {
+        'regions': 'us',
+        'oddsFormat': 'american'
+                         }
+    odds_call = ApiCall(key_name='the_odds_api_key', url=f'https://api.the-odds-api.com/v4/sports/{sport_key}/odds',
+                        additional_params=additional_params)
+
+    results = odds_call.run()
+
+    for result in results:
+        print(result)
+
+
 def postgres_connection_test():
     # Load connection parameters (you can also use python-dotenv)
     DB_HOST = os.getenv("PG_HOST")
@@ -58,4 +73,4 @@ def postgres_connection_class_test():
         print(result[0])
 
 
-sports_call_test()
+odds_call_test()

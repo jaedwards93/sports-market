@@ -3,9 +3,15 @@ from util.postgres import PostgresConnection
 import json
 
 
-def sports_ingest(batch_id: int):
-    sports_api_call = ApiCall(key_name='the_odds_api_key', url='https://api.the-odds-api.com/v4/sports')
-    results = sports_api_call.run()
+def odds_ingest(batch_id: int, sport_key: str):
+    additional_params = {
+        'regions': 'us',
+        'oddsFormat': 'american',
+        'markets': 'h2h,spreads,totals'
+                         }
+    odds_api_call = ApiCall(key_name='the_odds_api_key', url=f'https://api.the-odds-api.com/v4/sports/{sport_key}/odds',
+                            additional_params=additional_params)
+    results = odds_api_call.run()
 
     pg_conn = PostgresConnection(host_name='PG_HOST', port='PG_PORT', user_name='SPORTS_MARKET_RAW_USER_NAME',
                                  user_password='SPORTS_MARKET_RAW_USER_PASSWORD', db_name='PG_DB_NAME', auto_commit=True)
@@ -13,7 +19,7 @@ def sports_ingest(batch_id: int):
     pg_cursor = pg_conn.cursor
 
     insert_sql = """
-            INSERT INTO raw_the_odds_api.sports (json, batch_id)
+            INSERT INTO raw_the_odds_api.odds (json, batch_id)
             VALUES (%s, %s)
         """
 

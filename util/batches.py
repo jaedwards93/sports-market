@@ -20,4 +20,4 @@ def get_new_batch():
         FROM new_batch_id_cte
         """)
 
-    return pg_curs.fetchone()
+    return pg_curs.fetchone()[0]
