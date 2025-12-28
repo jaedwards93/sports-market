@@ -15,15 +15,18 @@ clear layer boundaries, replayability, and domain scalability.
    1. Pulls raw JSON from The Odds API
    2. Assigns a deterministic batch_id per run
    3. Stores meta data (Create Date)
-   4. Persists raw payloads unchanged for auditability 
+   4. Persists raw payloads unchanged for auditability
+      
 **2. Silver Layer (Staging / Flattening(dbt))**
    1. dbt models extract, flatten and type cast JSON payloads
    2. Create primary keys generated with dbt_utils
    3. Preserve raw/staging ids
    4. Individualized staging table for each endpoint
+      
 **3. Gold Layer (Analysis/Normalization (dbt))**
    1. Conformed, analytics-ready entities shared across domains
    2. Designed for BI tools, notebooks, or further modeling
+      
 **4. Orchestration (Dagster)**
    1. Asset-based dagster orchestration
    2. Clear lineage mapping and dependencies from ingestion to dbt models
