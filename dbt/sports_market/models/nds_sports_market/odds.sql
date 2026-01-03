@@ -24,6 +24,9 @@ SELECT DISTINCT ON (event_id, bookmaker_key, market_key, batch_id)
 	batch_id,
     CURRENT_TIMESTAMP::timestamptz(0) AT TIME ZONE 'America/New_York' load_timestamp
 FROM {{ ref('stg_odds')}}
+where batch_id > coalesce((
+      select max(batch_id) from {{ this }}
+  ), 0)
 GROUP BY
 	event_id,
 	sport_key,
@@ -38,13 +41,3 @@ GROUP BY
 	market_last_update,
 	batch_id
 ORDER BY event_id, bookmaker_key, market_key, batch_id DESC
-
-
-
-
-{% if is_incremental() %}
-  -- only pull rows with batch_id newer than what we've already loaded
-  where batch_id > coalesce((
-      select max(batch_id) from {{ this }}
-  ), 0)
-{% endif %}
