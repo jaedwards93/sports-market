@@ -5,25 +5,41 @@
     schema='nds_sports_market',
 ) }}
 
-SELECT
-    sports_sid,
-    sport_key,
-    sport_title,
-    commence_time::timestamptz(0) AT TIME ZONE 'America/New_York' commence_time,
-    home_team,
-    away_team,
-    bookmaker_key,
-    bookmaker_title,
-    bookmaker_last_update::timestamptz(0) AT TIME ZONE 'America/New_York' bookmaker_last_update,
-    market_key,
-    market_last_update::timestamptz(0) AT TIME ZONE 'America/New_York' market_last_update,
-    outcome_name,
-    outcome_price::INTEGER outcome_price,
-    outcome_point::DECIMAL(10,2) outcome_point,
-    batch_id::BIGINT,
-    load_timestamp::timestamptz(0) AT TIME ZONE 'America/New_York' load_timestamp,
-    CURRENT_TIMESTAMP::timestamptz(0) AT TIME ZONE 'America/New_York' CRT_DT
+SELECT DISTINCT ON (event_id, bookmaker_key, market_key, batch_id)
+	event_id,
+	sport_key,
+	sport_title,
+	commence_time,
+	bookmaker_key,
+	bookmaker_title,
+	bookmaker_last_update,
+	market_key,
+	market_last_update,
+	home_team,
+	MAX(CASE WHEN outcome_name = home_team THEN outcome_price END) home_team_outcome_price,
+	MAX(CASE WHEN outcome_name = home_team THEN outcome_point END) home_team_outcome_point,
+	away_team,
+	MAX(CASE WHEN outcome_name = away_team THEN outcome_price END) away_team_outcome_price,
+	MAX(CASE WHEN outcome_name = away_team THEN outcome_point END) away_team_outcome_point,
+	batch_id,
+    CURRENT_TIMESTAMP::timestamptz(0) AT TIME ZONE 'America/New_York' load_timestamp
 FROM {{ ref('stg_odds')}}
+GROUP BY
+	event_id,
+	sport_key,
+	sport_title,
+	commence_time,
+	home_team,
+	away_team,
+	bookmaker_key,
+	bookmaker_title,
+	bookmaker_last_update,
+	market_key,
+	market_last_update,
+	batch_id
+ORDER BY event_id, bookmaker_key, market_key, batch_id DESC
+
+
 
 
 {% if is_incremental() %}

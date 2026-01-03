@@ -33,3 +33,19 @@ sources:
           meta:
             dagster:
               asset_key: ["raw_odds"]
+
+      - name: scores
+        description: >
+          Raw scores metadata pulled from The Odds API `/sports/[sport_key]/scores` endpoint.
+        config:
+          meta:
+            dagster:
+              asset_key: [ "raw_scores" ]
+
+      - name: events
+        description: >
+          Raw events metadata pulled from The Odds API `/sports/[sport_key]/events` endpoint.
+        config:
+          meta:
+            dagster:
+              asset_key: [ "raw_events" ]

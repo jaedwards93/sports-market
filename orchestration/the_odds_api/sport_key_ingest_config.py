@@ -1,0 +1,1 @@
+sports_key_list = ['americanfootball_nfl', 'basketball_nba', 'boxing_boxing', 'mma_mixed_martial_arts']

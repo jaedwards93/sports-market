@@ -4,20 +4,20 @@
     database= 'sports_market',
     schema='nds_sports_market',
     indexes=[
-        {'columns': ['sport_key'], 'unique': true}
+        {'columns': ['event_id'], 'unique': true}
     ]
 ) }}
 
-SELECT DISTINCT ON (sport_key)
+SELECT DISTINCT ON (event_id)
+	event_id,
 	sport_key,
-	sport_group,
 	sport_title,
-	actv_flg,
-	sport_description,
-	outrights_flg,
+	home_team,
+	away_team,
+	commence_time,
 	pk stg_pk,
 	raw_pk,
 	batch_id,
 	CURRENT_TIMESTAMP::timestamptz(0) AT TIME ZONE 'America/New_York' LOAD_TIMESTAMP
-FROM {{ ref('stg_sports') }}
-ORDER BY sport_key, batch_id DESC
+FROM {{ ref('stg_events') }}
+ORDER BY event_id, batch_id DESC
